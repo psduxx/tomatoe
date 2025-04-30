@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gourmet Tomato Classifier</title>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+</head>
+<body>
+  <h1>Gourmet Tomato Classifier</h1>
+  <button type="button" onclick="init()">Load Model</button>
+  <br><br>
+  <input type="file" accept="image/*" onchange="predictImage(event)">
+  <br><br>
+  <div id="prediction"></div>
+
+  <script>
+    let model, labelContainer;
+
+    async function init() {
+      const URL = "https://teachablemachine.withgoogle.com/models/QRXa1Eg1o/"; // 注意！
+      const modelURL = URL + "model.json";
+      const metadataURL = URL + "metadata.json";
+
+      model = await tmImage.load(modelURL, metadataURL);
+      labelContainer = document.getElementById("prediction");
+      alert("Model Loaded!");
+    }
+
+    async function predictImage(event) {
+      const file = event.target.files[0];
+      const image = new Image();
+      image.src = URL.createObjectURL(file);
+      image.onload = async () => {
+        const prediction = await model.predict(image);
+        labelContainer.innerHTML = "";
+        prediction.forEach(p => {
+          const div = document.createElement("div");
+          div.innerText = `${p.className}: ${(p.probability * 100).toFixed(2)}%`;
+          labelContainer.appendChild(div);
+        });
+      };
+    }
+  </script>
+</body>
+</html>
