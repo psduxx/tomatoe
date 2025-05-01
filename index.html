@@ -17,7 +17,7 @@
     let model, labelContainer;
 
     async function init() {
-      const URL = "https://teachablemachine.withgoogle.com/models/QRXa1Eg1o/"; // 注意！
+      const URL = "https://teachablemachine.withgoogle.com/models/QRXa1Eg1o/"; // 确认这个URL正确
       const modelURL = URL + "model.json";
       const metadataURL = URL + "metadata.json";
 
@@ -29,7 +29,7 @@
     async function predictImage(event) {
       const file = event.target.files[0];
       const image = new Image();
-      image.src = URL.createObjectURL(file);
+      image.src = window.URL.createObjectURL(file); // 关键是加 window.
       image.onload = async () => {
         const prediction = await model.predict(image);
         labelContainer.innerHTML = "";
